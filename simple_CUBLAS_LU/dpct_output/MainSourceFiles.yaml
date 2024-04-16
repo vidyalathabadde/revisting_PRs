@@ -1,0 +1,496 @@
+---
+MainSourceFile:  '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/MainSrcFiles_placehold'
+Replacements:
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          2132
+    Length:          0
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          2170
+    Length:          0
+    ReplacementText: "\n#include <dpct/blas_utils.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          2202
+    Length:          23
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          2225
+    Length:          26
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          2275
+    Length:          0
+    ReplacementText: "\n#include <cmath>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          2781
+    Length:          14
+    ReplacementText: int
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          2816
+    Length:          14
+    ReplacementText: 'dpct::blas::descriptor_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          2981
+    Length:          0
+    ReplacementText: ' try '
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          3082
+    Length:          0
+    ReplacementText: "  /*\n  DPCT1047:14: The meaning of P in the dpct::getrf_batch_wrapper is different from the cublasSgetrfBatched. You may need to check the migrated code.\n  */\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          3091
+    Length:          58
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::getrf_batch_wrapper(handle->get_queue(), n, const_cast<float **>(A), lda, P, info, batchSize))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          3159
+    Length:          0
+    ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          6704
+    Length:          0
+    ReplacementText: ' try '
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          6730
+    Length:          14
+    ReplacementText: int
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          6755
+    Length:          14
+    ReplacementText: 'dpct::blas::descriptor_ptr'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          7371
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(handle = new dpct::blas::descriptor())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          7410
+    Length:          21
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          8084
+    Length:          51
+    ReplacementText: 'DPCT_CHECK_ERROR(d_Aarray = (float *)sycl::malloc_device(BATCH_SIZE * matSize, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          8163
+    Length:          63
+    ReplacementText: 'DPCT_CHECK_ERROR(d_pivotArray = sycl::malloc_device<int>(N * BATCH_SIZE, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          8247
+    Length:          58
+    ReplacementText: 'DPCT_CHECK_ERROR(d_infoArray = sycl::malloc_device<int>(BATCH_SIZE, dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          8333
+    Length:          65
+    ReplacementText: 'DPCT_CHECK_ERROR(d_ptr_array = (float **)sycl::malloc_device(BATCH_SIZE * sizeof(DATA_TYPE*), dpct::get_in_order_queue()))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          8695
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          8751
+    Length:          53
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          8805
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          8988
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          9085
+    Length:          53
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          9139
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          9524
+    Length:          21
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          9806
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          9863
+    Length:          53
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          9917
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          9938
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          9999
+    Length:          53
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          10053
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          10087
+    Length:          10
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::get_in_order_queue().memcpy'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          10183
+    Length:          53
+    ReplacementText: ''
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          10237
+    Length:          0
+    ReplacementText: '.wait())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          11678
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_ptr_array, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          11699
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          11720
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_infoArray, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          11741
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          11762
+    Length:          22
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_pivotArray, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          11784
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          11805
+    Length:          18
+    ReplacementText: 'DPCT_CHECK_ERROR(dpct::dpct_free(d_Aarray, dpct::get_in_order_queue())'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          11823
+    Length:          0
+    ReplacementText: ')'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          12055
+    Length:          21
+    ReplacementText: 'DPCT_CHECK_ERROR(delete (handle))'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          12094
+    Length:          21
+    ReplacementText: '0'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Offset:          12455
+    Length:          0
+    ReplacementText: "\ncatch (sycl::exception const &exc) {\n  std::cerr << exc.what() << \"Exception caught at file:\" << __FILE__ << \", line:\" << __LINE__ << std::endl;\n  std::exit(1);\n}"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU/simpleCUBLAS_LU.cpp'
+    Digest:          2be9b5a98ec0f02866dbe3cf0c68bf2f
+DpctVersion:     19.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/home/tcs2/vidya/cuda-samples'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/home/tcs2/vidya/cuda-samples/Samples/4_CUDA_Libraries/simpleCUBLAS_LU'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '0'
+    Specified:       false
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...
