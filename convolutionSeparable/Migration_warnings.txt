@@ -1,0 +1,82 @@
+c2s -p compile_commands.json --in-root ../../.. --gen-helper-function --optimize-migration
+The directory "dpct_output" is used as "out-root"
+Parsing: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu
+NOTE: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp is treated as a CUDA file by default. Use the --extra-arg=-xc++ option to treat /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp as a C++ file if needed.
+Parsing: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp
+NOTE: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable_gold.cpp is treated as a CUDA file by default. Use the --extra-arg=-xc++ option to treat /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable_gold.cpp as a C++ file if needed.
+Parsing: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable_gold.cpp
+Analyzing: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu
+/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu:95:3: warning: DPCT1065:0: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+   95 |   cg::sync(cta);
+      |   ^
+/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu:184:3: warning: DPCT1065:1: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+  184 |   cg::sync(cta);
+      |   ^
+Analyzing: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp
+Analyzing: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable_gold.cpp
+Migrating: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu
+In file included from /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu:29:
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:54:10: warning: DPCT1009:2: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced by a placeholder string. You need to rewrite this code.
+   54 |   return cudaGetErrorName(error);
+      |          ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:602:21: warning: DPCT1010:3: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.
+  602 |   cudaError_t err = cudaGetLastError();
+      |                     ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:609:13: warning: DPCT1009:4: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced by a placeholder string. You need to rewrite this code.
+  609 |             cudaGetErrorString(err));
+      |             ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:620:21: warning: DPCT1010:5: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced with 0. You need to rewrite this code.
+  620 |   cudaError_t err = cudaGetLastError();
+      |                     ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:627:13: warning: DPCT1009:6: SYCL uses exceptions to report errors and does not use the error codes. The call was replaced by a placeholder string. You need to rewrite this code.
+  627 |             cudaGetErrorString(err));
+      |             ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:772:19: warning: DPCT1035:7: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.
+  772 |   checkCudaErrors(cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, devID));
+      |                   ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:775:22: warning: DPCT1035:8: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.
+  775 |   if (computeMode == cudaComputeModeProhibited) {
+      |                      ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:787:19: warning: DPCT1093:9: The "devID" device may be not the one intended for use. Adjust the selected device if needed.
+  787 |   checkCudaErrors(cudaSetDevice(devID));
+      |                   ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:815:21: warning: DPCT1035:10: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.
+  815 |     checkCudaErrors(cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, current_device));
+      |                     ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:821:24: warning: DPCT1035:11: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.
+  821 |     if (computeMode != cudaComputeModeProhibited) {
+      |                        ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:888:21: warning: DPCT1093:12: The "devID" device may be not the one intended for use. Adjust the selected device if needed.
+  888 |     checkCudaErrors(cudaSetDevice(devID));
+      |                     ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:915:21: warning: DPCT1035:13: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.
+  915 |     checkCudaErrors(cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, current_device));
+      |                     ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:919:39: warning: DPCT1035:14: All SYCL devices can be used by the host to submit tasks. You may need to adjust this code.
+  919 |     if (integrated && (computeMode != cudaComputeModeProhibited)) {
+      |                                       ^
+/home/tcs2/vidya/cuda-samples/Common/helper_cuda.h:920:23: warning: DPCT1093:15: The "current_device" device may be not the one intended for use. Adjust the selected device if needed.
+  920 |       checkCudaErrors(cudaSetDevice(current_device));
+      |                       ^
+Migrating: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp
+/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/main.cpp:102:19: warning: DPCT1114:16: cudaMemcpy is migrated to asynchronization memcpy, assuming in the original code the source host memory is pageable memory. If the memory is not pageable, call wait() on event return by memcpy API to ensure synchronization behavior.
+  102 |   checkCudaErrors(cudaMemcpy(d_Input, h_Input, imageW * imageH * sizeof(float),
+      |                   ^
+Migrating: /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable_gold.cpp
+/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu:57:7: warning: DPCT1101:17: 'ROWS_BLOCKDIM_Y' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.
+   57 |       s_Data[ROWS_BLOCKDIM_Y][(ROWS_RESULT_STEPS + 2 * ROWS_HALO_STEPS) *
+      |       ^
+/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu:57:7: warning: DPCT1101:18: '(ROWS_RESULT_STEPS + 2 * ROWS_HALO_STEPS) *
+                              ROWS_BLOCKDIM_X' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.
+/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu:139:20: warning: DPCT1101:19: 'COLUMNS_BLOCKDIM_X' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.
+  139 |   __shared__ float s_Data[COLUMNS_BLOCKDIM_X][(COLUMNS_RESULT_STEPS +
+      |                    ^
+/home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/convolutionSeparable.cu:139:20: warning: DPCT1101:20: '(COLUMNS_RESULT_STEPS +
+                                               2 * COLUMNS_HALO_STEPS) *
+                                                  COLUMNS_BLOCKDIM_Y +
+                                              1' expression was replaced with a value. Modify the code to use the original expression, provided in comments, if it is correct.
+Saved new version of /home/tcs2/vidya/cuda-samples/Samples/2_Concepts_and_Techniques/convolutionSeparable/dpct_output/Common/helper_cuda.h.yaml file
+Processed 3 file(s) in -in-root folder "/home/tcs2/vidya/cuda-samples"
+
+See Diagnostics Reference to resolve warnings and complete the migration:
+https://www.intel.com/content/www/us/en/docs/dpcpp-compatibility-tool/developer-guide-reference/current/diagnostics-reference.html
