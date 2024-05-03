@@ -184,11 +184,10 @@ int runTest(int packedElementSize, int memory_size) {
   const int numElements = iDivDown(memory_size, sizeof(TData));
 
   // Clean output buffer before current test
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_in_order_queue().memset(d_odata, 0, memory_size).wait()));
+ DPCT_CHECK_ERROR(
+      dpct::get_in_order_queue().memset(d_odata, 0, memory_size).wait());
   // Run test
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
+      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw());
   sdkResetTimer(&hTimer);
   sdkStartTimer(&hTimer);
 
@@ -205,20 +204,19 @@ int runTest(int packedElementSize, int memory_size) {
                                            numElements, item_ct1);
                        });
     });
-    getLastCudaError("testKernel() execution failed\n");
+    
   }
 
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
+      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw());
   sdkStopTimer(&hTimer);
   double gpuTime = sdkGetTimerValue(&hTimer) / NUM_ITERATIONS;
   printf("Avg. time: %f ms / Copy throughput: %f GB/s.\n", gpuTime,
          (double)totalMemSizeAligned / (gpuTime * 0.001 * 1073741824.0));
 
   // Read back GPU results and run validation
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_in_order_queue()
+  DPCT_CHECK_ERROR(dpct::get_in_order_queue()
                                        .memcpy(h_odataGPU, d_odata, memory_size)
-                                       .wait()));
+                                       .wait());
   int flag = testCPU((TData *)h_odataGPU, (TData *)h_idataCPU, numElements,
                      packedElementSize);
 
@@ -235,33 +233,24 @@ int main(int argc, char **argv) {
   printf("[%s] - Starting...\n", argv[0]);
 
   // find first CUDA device
-  devID = 0;// findCudaDevice(argc, (const char **)argv);
+  devID = 0;
 
   // get number of SMs on this GPU
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(devID))));
+  DPCT_CHECK_ERROR(dpct::get_device_info(
+      deviceProp, dpct::dev_mgr::instance().get_device(devID)));
   printf("[%s] has %d MP(s) x %d (Cores/MP) = %d (Cores)\n",
          deviceProp.get_name(), deviceProp.get_max_compute_units(),
-         /*
-         DPCT1005:14: The SYCL device version is different from CUDA Compute
-         Compatibility. You may need to rewrite this code.
-         */
+        
          _ConvertSMVer2Cores(deviceProp.get_major_version(),
                              deviceProp.get_minor_version()),
-         /*
-         DPCT1005:15: The SYCL device version is different from CUDA Compute
-         Compatibility. You may need to rewrite this code.
-         */
+         
          _ConvertSMVer2Cores(deviceProp.get_major_version(),
                              deviceProp.get_minor_version()) *
              deviceProp.get_max_compute_units());
 
   // Anything that is less than 192 Cores will have a scaled down workload
   float scale_factor =
-      /*
-      DPCT1005:16: The SYCL device version is different from CUDA Compute
-      Compatibility. You may need to rewrite this code.
-      */
+     
       std::max((192.0f / (_ConvertSMVer2Cores(deviceProp.get_major_version(),
                                               deviceProp.get_minor_version()) *
                           (float)deviceProp.get_max_compute_units())),
@@ -278,12 +267,12 @@ int main(int argc, char **argv) {
   printf("Allocating memory...\n");
   h_idataCPU = (unsigned char *)malloc(MemorySize);
   h_odataGPU = (unsigned char *)malloc(MemorySize);
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(d_idata = (unsigned char *)sycl::malloc_device(
-                           MemorySize, dpct::get_in_order_queue())));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(d_odata = (unsigned char *)sycl::malloc_device(
-                           MemorySize, dpct::get_in_order_queue())));
+  
+  DPCT_CHECK_ERROR(d_idata = (unsigned char *)sycl::malloc_device(
+                           MemorySize, dpct::get_in_order_queue()));
+
+  DPCT_CHECK_ERROR(d_odata = (unsigned char *)sycl::malloc_device(
+                           MemorySize, dpct::get_in_order_queue()));
 
   printf("Generating host input data array...\n");
 
@@ -292,7 +281,7 @@ int main(int argc, char **argv) {
   }
 
   printf("Uploading input data to GPU memory...\n");
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_in_order_queue()
+  DPCT_CHECK_ERROR(dpct::get_in_order_queue()
                                        .memcpy(d_idata, h_idataCPU, MemorySize)
                                        .wait()));
 
@@ -337,10 +326,9 @@ int main(int argc, char **argv) {
   printf("\n[alignedTypes] -> Test Results: %d Failures\n", nTotalFailures);
 
   printf("Shutting down...\n");
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::dpct_free(d_idata, dpct::get_in_order_queue())));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::dpct_free(d_odata, dpct::get_in_order_queue())));
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_idata, dpct::get_in_order_queue()));
+
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_odata, dpct::get_in_order_queue()));
   free(h_odataGPU);
   free(h_idataCPU);
 
