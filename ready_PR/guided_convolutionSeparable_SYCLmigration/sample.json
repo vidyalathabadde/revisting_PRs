@@ -1,7 +1,7 @@
 {
   "guid": "8D04A8D5-36D0-4C35-B93D-238D27049177",
   "name": "convolutionSeparable",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
   "description": "This sample implements a separable convolution filter of a 2D signal with a gaussian kernel.",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
