@@ -95,21 +95,18 @@ int main(int argc, char **argv) {
   }
 
   printf("Allocating and initializing CUDA arrays...\n");
-  checkCudaErrors(
       DPCT_CHECK_ERROR(d_Input = sycl::malloc_device<float>(
-                           imageW * imageH, dpct::get_in_order_queue())));
-  checkCudaErrors(
+                           imageW * imageH, dpct::get_in_order_queue()));
       DPCT_CHECK_ERROR(d_Output = sycl::malloc_device<float>(
-                           imageW * imageH, dpct::get_in_order_queue())));
-  checkCudaErrors(
+                           imageW * imageH, dpct::get_in_order_queue()));
       DPCT_CHECK_ERROR(d_Buffer = sycl::malloc_device<float>(
-                           imageW * imageH, dpct::get_in_order_queue())));
+                           imageW * imageH, dpct::get_in_order_queue()));
 
   setConvolutionKernel(h_Kernel);
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
       dpct::get_in_order_queue()
           .memcpy(d_Input, h_Input, imageW * imageH * sizeof(float))
-          .wait()));
+          .wait());
 
   printf("Running GPU convolution (%u identical iterations)...\n\n",
          iterations);
@@ -117,8 +114,7 @@ int main(int argc, char **argv) {
   for (int i = -1; i < iterations; i++) {
     // i == -1 -- warmup iteration
     if (i == 0) {
-      checkCudaErrors(
-          DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
+          DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw());
       sdkResetTimer(&hTimer);
       sdkStartTimer(&hTimer);
     }
@@ -128,8 +124,7 @@ int main(int argc, char **argv) {
     convolutionColumnsGPU(d_Output, d_Buffer, imageW, imageH);
   }
 
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
+      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw());
   sdkStopTimer(&hTimer);
   double gpuTime = 0.001 * sdkGetTimerValue(&hTimer) / (double)iterations;
   printf(
@@ -139,10 +134,10 @@ int main(int argc, char **argv) {
       (imageW * imageH), 1, 0);
 
   printf("\nReading back GPU results...\n\n");
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
       dpct::get_in_order_queue()
           .memcpy(h_OutputGPU, d_Output, imageW * imageH * sizeof(float))
-          .wait()));
+          .wait());
 
   printf("Checking the results...\n");
   printf(" ...running convolutionRowCPU()\n");
@@ -164,13 +159,9 @@ int main(int argc, char **argv) {
   double L2norm = sqrt(delta / sum);
   printf(" ...Relative L2 norm: %E\n\n", L2norm);
   printf("Shutting down...\n");
-
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::dpct_free(d_Buffer, dpct::get_in_order_queue())));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::dpct_free(d_Output, dpct::get_in_order_queue())));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::dpct_free(d_Input, dpct::get_in_order_queue())));
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_Buffer, dpct::get_in_order_queue()));
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_Output, dpct::get_in_order_queue()));
+      DPCT_CHECK_ERROR(dpct::dpct_free(d_Input, dpct::get_in_order_queue()));
   free(h_OutputGPU);
   free(h_OutputCPU);
   free(h_Buffer);
