@@ -1,7 +1,7 @@
 {
   "guid": "9BF54B57-11D2-45C1-83D2-C41E952F1260",
   "name": "alignedTypes",
-  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL"],
+  "categories": ["Toolkit/oneAPI Direct Programming/C++SYCL/SYCLMigration"],
   "description": "This sample demonstrates the access speed gap of aligned & misaligned types",
   "toolchain": [ "dpcpp" ],
   "languages": [ { "cpp": {} } ],
