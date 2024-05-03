@@ -111,30 +111,20 @@ void reduceSinglePass(int size, int threads, int blocks, float *d_idata,
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char **argv) {
   dpct::device_info deviceProp;
-  /*
-  DPCT1005:62: The SYCL device version is different from CUDA Compute
-  Compatibility. You may need to rewrite this code.
-  */
+
   deviceProp.set_major_version(0);
-  /*
-  DPCT1005:63: The SYCL device version is different from CUDA Compute
-  Compatibility. You may need to rewrite this code.
-  */
+ 
   deviceProp.set_minor_version(0);
   int dev;
 
   printf("%s Starting...\n\n", sSDKsample);
 
-  dev = 0;//findCudaDevice(argc, (const char **)argv);
+  dev = 0;
 
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_device_info(
-      deviceProp, dpct::dev_mgr::instance().get_device(dev))));
+  DPCT_CHECK_ERROR(dpct::get_device_info(
+      deviceProp, dpct::dev_mgr::instance().get_device(dev)));
 
   printf("GPU Device supports SM %d.%d compute capability\n\n",
-         /*
-         DPCT1005:64: The SYCL device version is different from CUDA Compute
-         Compatibility. You may need to rewrite this code.
-         */
          deviceProp.get_major_version(), deviceProp.get_minor_version());
 
   bool bTestResult = false;
@@ -216,7 +206,6 @@ float benchmarkReduce(int n, int numThreads, int numBlocks, int maxThreads,
     gpu_result = 0;
     unsigned int retCnt = 0;
     error = setRetirementCount(retCnt);
-    checkCudaErrors(error);
 
     dpct::get_current_device().queues_wait_and_throw();
     sdkStartTimer(&timer);
@@ -226,7 +215,7 @@ float benchmarkReduce(int n, int numThreads, int numBlocks, int maxThreads,
       reduce(n, numThreads, numBlocks, d_idata, d_odata);
 
       // check if kernel execution generated an error
-      getLastCudaError("Kernel execution failed");
+      
 
       if (cpuFinalReduction) {
         // sum partial sums from each block on CPU
@@ -235,7 +224,6 @@ float benchmarkReduce(int n, int numThreads, int numBlocks, int maxThreads,
             dpct::get_in_order_queue()
                 .memcpy(h_odata, d_odata, numBlocks * sizeof(float))
                 .wait());
-        checkCudaErrors(error);
 
         for (int i = 0; i < numBlocks; i++) {
           gpu_result += h_odata[i];
@@ -261,7 +249,6 @@ float benchmarkReduce(int n, int numThreads, int numBlocks, int maxThreads,
               DPCT_CHECK_ERROR(dpct::get_in_order_queue()
                                    .memcpy(h_odata, d_odata, s * sizeof(float))
                                    .wait());
-          checkCudaErrors(error);
 
           for (int i = 0; i < s; i++) {
             gpu_result += h_odata[i];
@@ -271,13 +258,11 @@ float benchmarkReduce(int n, int numThreads, int numBlocks, int maxThreads,
         }
       }
     } else {
-      getLastCudaError("Kernel execution failed");
 
       // execute the kernel
       reduceSinglePass(n, numThreads, numBlocks, d_idata, d_odata);
 
       // check if kernel execution generated an error
-      getLastCudaError("Kernel execution failed");
     }
 
     dpct::get_current_device().queues_wait_and_throw();
@@ -289,7 +274,6 @@ float benchmarkReduce(int n, int numThreads, int numBlocks, int maxThreads,
     error = DPCT_CHECK_ERROR(dpct::get_in_order_queue()
                                  .memcpy(&gpu_result, d_odata, sizeof(float))
                                  .wait());
-    checkCudaErrors(error);
   }
 
   return gpu_result;
@@ -326,19 +310,18 @@ void shmoo(int minN, int maxN, int maxThreads, int maxBlocks) {
   float *d_idata = NULL;
   float *d_odata = NULL;
 
-  checkCudaErrors(DPCT_CHECK_ERROR(d_idata = (float *)sycl::malloc_device(
-                                       bytes, dpct::get_in_order_queue())));
-  checkCudaErrors(
+  DPCT_CHECK_ERROR(d_idata = (float *)sycl::malloc_device(
+                                       bytes, dpct::get_in_order_queue()));
       DPCT_CHECK_ERROR(d_odata = sycl::malloc_device<float>(
-                           maxNumBlocks, dpct::get_in_order_queue())));
+                           maxNumBlocks, dpct::get_in_order_queue()));
 
   // copy data directly to device memory
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_in_order_queue().memcpy(d_idata, h_idata, bytes).wait()));
-  checkCudaErrors(DPCT_CHECK_ERROR(
+  DPCT_CHECK_ERROR(
+      dpct::get_in_order_queue().memcpy(d_idata, h_idata, bytes).wait());
+  DPCT_CHECK_ERROR(
       dpct::get_in_order_queue()
           .memcpy(d_odata, h_idata, maxNumBlocks * sizeof(float))
-          .wait()));
+          .wait());
 
   // warm-up
   reduce(maxN, maxThreads, maxNumBlocks, d_idata, d_odata);
@@ -446,19 +429,19 @@ bool runTest(int argc, char **argv) {
     float *d_idata = NULL;
     float *d_odata = NULL;
 
-    checkCudaErrors(DPCT_CHECK_ERROR(d_idata = (float *)sycl::malloc_device(
-                                         bytes, dpct::get_in_order_queue())));
-    checkCudaErrors(DPCT_CHECK_ERROR(
+    DPCT_CHECK_ERROR(d_idata = (float *)sycl::malloc_device(
+                                         bytes, dpct::get_in_order_queue()));
+    DPCT_CHECK_ERROR(
         d_odata =
-            sycl::malloc_device<float>(numBlocks, dpct::get_in_order_queue())));
+            sycl::malloc_device<float>(numBlocks, dpct::get_in_order_queue()));
 
     // copy data directly to device memory
-    checkCudaErrors(DPCT_CHECK_ERROR(
-        dpct::get_in_order_queue().memcpy(d_idata, h_idata, bytes).wait()));
-    checkCudaErrors(DPCT_CHECK_ERROR(
+    DPCT_CHECK_ERROR(
+        dpct::get_in_order_queue().memcpy(d_idata, h_idata, bytes).wait());
+    DPCT_CHECK_ERROR(
         dpct::get_in_order_queue()
             .memcpy(d_odata, h_idata, numBlocks * sizeof(float))
-            .wait()));
+            .wait());
 
     // warm-up
     reduce(size, numThreads, numBlocks, d_idata, d_odata);
