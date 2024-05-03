@@ -53,11 +53,6 @@ void reduceBlock(volatile float *sdata, float mySum, const unsigned int tid,
                  sycl::group<3> cta, const sycl::nd_item<3> &item_ct1) {
   sycl::sub_group tile32 = item_ct1.get_sub_group();
   sdata[tid] = mySum;
-  /*
-  DPCT1065:0: Consider replacing sycl::sub_group::barrier() with
-  sycl::sub_group::barrier(sycl::access::fence_space::local_space) for better
-  performance if there is no access to global memory.
-  */
   item_ct1.get_sub_group().barrier();
 
   const int VEC = 32;
@@ -72,18 +67,8 @@ void reduceBlock(volatile float *sdata, float mySum, const unsigned int tid,
       beta += temp;
       sdata[tid] = beta;
     }
-    /*
-    DPCT1065:3: Consider replacing sycl::sub_group::barrier() with
-    sycl::sub_group::barrier(sycl::access::fence_space::local_space) for better
-    performance if there is no access to global memory.
-    */
     item_ct1.get_sub_group().barrier();
   }
-  /*
-  DPCT1065:1: Consider replacing sycl::nd_item::barrier() with
-  sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-  performance if there is no access to global memory.
-  */
   item_ct1.barrier();
 
   if (item_ct1.get_local_linear_id() == 0) {
@@ -93,11 +78,6 @@ void reduceBlock(volatile float *sdata, float mySum, const unsigned int tid,
     }
     sdata[0] = beta;
   }
-  /*
-  DPCT1065:2: Consider replacing sycl::nd_item::barrier() with
-  sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-  performance if there is no access to global memory.
-  */
   item_ct1.barrier();
 }
 
@@ -203,11 +183,6 @@ void reduceSinglePass(const float *g_idata, float *g_odata,
 
     // wait until all outstanding memory instructions in this thread are
     // finished
-    /*
-    DPCT1078:4: Consider replacing memory_order::acq_rel with
-    memory_order::seq_cst for correctness if strong memory order restrictions
-    are needed.
-    */
     sycl::atomic_fence(sycl::memory_order::acq_rel, sycl::memory_scope::device);
    // __syncthreads();
 
@@ -220,12 +195,6 @@ void reduceSinglePass(const float *g_idata, float *g_odata,
       // block!
       amLast = (ticket == item_ct1.get_group_range(2) - 1);
     }
-
-    /*
-    DPCT1065:5: Consider replacing sycl::nd_item::barrier() with
-    sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-    performance if there is no access to global memory.
-    */
     item_ct1.barrier();
 
     // The last block sums the results of all other blocks
@@ -260,22 +229,12 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
   sycl::range<3> dimBlock(1, 1, threads);
   sycl::range<3> dimGrid(1, 1, blocks);
   int smemSize =
-      /*
-      DPCT1083:7: The size of local memory in the migrated code may be different
-      from the original code. Check that the allocated memory size in the
-      migrated code is correct.
-      */
       (threads <= 32) ? 2 * threads * sizeof(float) : threads * sizeof(float);
 
   // choose which of the optimized versions of reduction to launch
   if (isPow2(size)) {
     switch (threads) {
       case 512:
-        /*
-        DPCT1049:6: The work-group size passed to the SYCL kernel may exceed the
-        limit. To get the device limit, query info::device::max_work_group_size.
-        Adjust the work-group size if needed.
-        */
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -293,11 +252,6 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 256:
-        /*
-        DPCT1049:8: The work-group size passed to the SYCL kernel may exceed the
-        limit. To get the device limit, query info::device::max_work_group_size.
-        Adjust the work-group size if needed.
-        */
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -315,11 +269,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 128:
-        /*
-        DPCT1049:9: The work-group size passed to the SYCL kernel may exceed the
-        limit. To get the device limit, query info::device::max_work_group_size.
-        Adjust the work-group size if needed.
-        */
+
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -337,11 +287,6 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 64:
-        /*
-        DPCT1049:10: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -359,11 +304,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 32:
-        /*
-        DPCT1049:11: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -381,11 +322,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 16:
-        /*
-        DPCT1049:12: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+    
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -403,11 +340,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 8:
-        /*
-        DPCT1049:13: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+    
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -425,11 +358,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 4:
-        /*
-        DPCT1049:14: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+    
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -447,11 +376,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 2:
-        /*
-        DPCT1049:15: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -469,11 +394,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 1:
-        /*
-        DPCT1049:16: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -493,11 +414,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
   } else {
     switch (threads) {
       case 512:
-        /*
-        DPCT1049:17: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -515,11 +432,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 256:
-        /*
-        DPCT1049:18: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -537,11 +450,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 128:
-        /*
-        DPCT1049:19: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -559,11 +468,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 64:
-        /*
-        DPCT1049:20: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+        
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -581,11 +486,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 32:
-        /*
-        DPCT1049:21: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -603,11 +504,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 16:
-        /*
-        DPCT1049:22: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -625,11 +522,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 8:
-        /*
-        DPCT1049:23: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -647,11 +540,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 4:
-        /*
-        DPCT1049:24: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -669,11 +558,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 2:
-        /*
-        DPCT1049:25: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+        
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -691,11 +576,7 @@ extern "C" void reduce(int size, int threads, int blocks, float *d_idata,
         break;
 
       case 1:
-        /*
-        DPCT1049:26: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+        
       dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
         sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
             sycl::range<1>(smemSize), cgh);
@@ -719,22 +600,14 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
                                  float *d_idata, float *d_odata) {
   sycl::range<3> dimBlock(1, 1, threads);
   sycl::range<3> dimGrid(1, 1, blocks);
-  /*
-  DPCT1083:28: The size of local memory in the migrated code may be different
-  from the original code. Check that the allocated memory size in the migrated
-  code is correct.
-  */
+ 
   int smemSize = threads * sizeof(float);
 
   // choose which of the optimized versions of reduction to launch
   if (isPow2(size)) {
     switch (threads) {
       case 512:
-        /*
-        DPCT1049:27: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -761,11 +634,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 256:
-        /*
-        DPCT1049:29: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -792,11 +661,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 128:
-        /*
-        DPCT1049:30: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+      
       {
         retirementCount.init();
 
@@ -823,11 +688,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 64:
-        /*
-        DPCT1049:31: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -854,11 +715,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 32:
-        /*
-        DPCT1049:32: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+        
       {
         retirementCount.init();
 
@@ -885,11 +742,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 16:
-        /*
-        DPCT1049:33: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -916,11 +769,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 8:
-        /*
-        DPCT1049:34: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -947,11 +796,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 4:
-        /*
-        DPCT1049:35: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+        
       {
         retirementCount.init();
 
@@ -978,11 +823,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 2:
-        /*
-        DPCT1049:36: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -1009,11 +850,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 1:
-        /*
-        DPCT1049:37: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+     
       {
         retirementCount.init();
 
@@ -1042,11 +879,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
   } else {
     switch (threads) {
       case 512:
-        /*
-        DPCT1049:38: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+        
       {
         retirementCount.init();
 
@@ -1073,11 +906,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 256:
-        /*
-        DPCT1049:39: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -1104,11 +933,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 128:
-        /*
-        DPCT1049:40: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -1135,11 +960,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 64:
-        /*
-        DPCT1049:41: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -1166,11 +987,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 32:
-        /*
-        DPCT1049:42: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -1197,11 +1014,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 16:
-        /*
-        DPCT1049:43: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -1228,11 +1041,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 8:
-        /*
-        DPCT1049:44: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -1259,11 +1068,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 4:
-        /*
-        DPCT1049:45: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+       
       {
         retirementCount.init();
 
@@ -1290,11 +1095,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 2:
-        /*
-        DPCT1049:46: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+        
       {
         retirementCount.init();
 
@@ -1321,11 +1122,7 @@ extern "C" void reduceSinglePass(int size, int threads, int blocks,
         break;
 
       case 1:
-        /*
-        DPCT1049:47: The work-group size passed to the SYCL kernel may exceed
-        the limit. To get the device limit, query
-        info::device::max_work_group_size. Adjust the work-group size if needed.
-        */
+        
       {
         retirementCount.init();
 
