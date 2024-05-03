@@ -102,10 +102,10 @@ int main(int argc, char *argv[]) {
   h_ResultCPU = (float *)malloc(DATA_SIZE);
   h_ResultGPU = (float *)malloc(DATA_SIZE);
   printf("...allocating GPU memory\n");
-  checkCudaErrors(DPCT_CHECK_ERROR(d_Kernel = (float *)sycl::malloc_device(
-                                       DATA_SIZE, dpct::get_in_order_queue())));
-  checkCudaErrors(DPCT_CHECK_ERROR(d_Data = (float *)sycl::malloc_device(
-                                       DATA_SIZE, dpct::get_in_order_queue())));
+  DPCT_CHECK_ERROR(d_Kernel = (float *)sycl::malloc_device(
+                                       DATA_SIZE, dpct::get_in_order_queue()));
+  DPCT_CHECK_ERROR(d_Data = (float *)sycl::malloc_device(
+                                       DATA_SIZE, dpct::get_in_order_queue()));
 
   printf("...generating data\n");
   printf("Data length: %i; kernel length: %i\n", dataN, kernelN);
@@ -119,34 +119,32 @@ int main(int argc, char *argv[]) {
     h_Data[i] = (float)rand() / (float)RAND_MAX;
   }
 
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_in_order_queue().memset(d_Kernel, 0, DATA_SIZE).wait()));
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_in_order_queue()
+  DPCT_CHECK_ERROR(
+      dpct::get_in_order_queue().memset(d_Kernel, 0, DATA_SIZE).wait());
+  DPCT_CHECK_ERROR(dpct::get_in_order_queue()
                                        .memcpy(d_Kernel, h_Kernel, KERNEL_SIZE)
-                                       .wait()));
-  checkCudaErrors(DPCT_CHECK_ERROR(
-      dpct::get_in_order_queue().memcpy(d_Data, h_Data, DATA_SIZE).wait()));
+                                       .wait());
+  DPCT_CHECK_ERROR(
+      dpct::get_in_order_queue().memcpy(d_Data, h_Data, DATA_SIZE).wait());
 
   printf("Running GPU dyadic convolution using Fast Walsh Transform...\n");
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
+  DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw());
   sdkResetTimer(&hTimer);
   sdkStartTimer(&hTimer);
   fwtBatchGPU(d_Data, 1, log2Data);
   fwtBatchGPU(d_Kernel, 1, log2Data);
   modulateGPU(d_Data, d_Kernel, dataN);
   fwtBatchGPU(d_Data, 1, log2Data);
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw()));
+  DPCT_CHECK_ERROR(dpct::get_current_device().queues_wait_and_throw());
   sdkStopTimer(&hTimer);
   gpuTime = sdkGetTimerValue(&hTimer);
   printf("GPU time: %f ms; GOP/s: %f\n", gpuTime,
          NOPS / (gpuTime * 0.001 * 1E+9));
 
   printf("Reading back GPU results...\n");
-  checkCudaErrors(DPCT_CHECK_ERROR(dpct::get_in_order_queue()
+  DPCT_CHECK_ERROR(dpct::get_in_order_queue()
                                        .memcpy(h_ResultGPU, d_Data, DATA_SIZE)
-                                       .wait()));
+                                       .wait());
 
   printf("Running straightforward CPU dyadic convolution...\n");
   dyadicConvolutionCPU(h_ResultCPU, h_Data, h_Kernel, log2Data, log2Kernel);
@@ -166,10 +164,8 @@ int main(int argc, char *argv[]) {
 
   printf("Shutting down...\n");
   sdkDeleteTimer(&hTimer);
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::dpct_free(d_Data, dpct::get_in_order_queue())));
-  checkCudaErrors(
-      DPCT_CHECK_ERROR(dpct::dpct_free(d_Kernel, dpct::get_in_order_queue())));
+  DPCT_CHECK_ERROR(dpct::dpct_free(d_Data, dpct::get_in_order_queue()));
+  DPCT_CHECK_ERROR(dpct::dpct_free(d_Kernel, dpct::get_in_order_queue()));
   free(h_ResultGPU);
   free(h_ResultCPU);
   free(h_Data);
