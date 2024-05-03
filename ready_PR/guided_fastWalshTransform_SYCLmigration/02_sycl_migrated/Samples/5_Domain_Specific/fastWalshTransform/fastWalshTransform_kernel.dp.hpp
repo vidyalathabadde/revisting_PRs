@@ -65,12 +65,6 @@ void fwtBatch1Kernel(float *d_Output, float *d_Input, int log2N,
     int i1 = i0 + stride;
     int i2 = i1 + stride;
     int i3 = i2 + stride;
-
-    /*
-    DPCT1065:1: Consider replacing sycl::nd_item::barrier() with
-    sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-    performance if there is no access to global memory.
-    */
     item_ct1.barrier();
     float D0 = s_data[i0];
     float D1 = s_data[i1];
@@ -94,11 +88,7 @@ void fwtBatch1Kernel(float *d_Output, float *d_Input, int log2N,
 
   // Do single radix-2 stage for odd power of two
   if (log2N & 1) {
-    /*
-    DPCT1065:2: Consider replacing sycl::nd_item::barrier() with
-    sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-    performance if there is no access to global memory.
-    */
+   
     item_ct1.barrier();
 
     for (int pos = item_ct1.get_local_id(2); pos < N / 2;
@@ -113,11 +103,6 @@ void fwtBatch1Kernel(float *d_Output, float *d_Input, int log2N,
     }
   }
 
-  /*
-  DPCT1065:0: Consider replacing sycl::nd_item::barrier() with
-  sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better
-  performance if there is no access to global memory.
-  */
   item_ct1.barrier();
 
   for (int pos = item_ct1.get_local_id(2); pos < N;
@@ -184,20 +169,10 @@ void fwtBatchGPU(float *d_Data, int M, int log2N) {
                          fwtBatch2Kernel(d_Data, d_Data, N_ct2, item_ct1);
                        });
     });
-    getLastCudaError("fwtBatch2Kernel() execution failed\n");
   }
 
-  /*
-  DPCT1049:3: The work-group size passed to the SYCL kernel may exceed the
-  limit. To get the device limit, query info::device::max_work_group_size.
-  Adjust the work-group size if needed.
-  */
   dpct::get_in_order_queue().submit([&](sycl::handler &cgh) {
-    /*
-    DPCT1083:18: The size of local memory in the migrated code may be
-    different from the original code. Check that the allocated memory size in
-    the migrated code is correct.
-    */
+   
     sycl::local_accessor<uint8_t, 1> dpct_local_acc_ct1(
         sycl::range<1>(N * sizeof(float)), cgh);
 
@@ -211,7 +186,7 @@ void fwtBatchGPU(float *d_Data, int M, int log2N) {
                   .get());
         });
   });
-  getLastCudaError("fwtBatch1Kernel() execution failed\n");
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
