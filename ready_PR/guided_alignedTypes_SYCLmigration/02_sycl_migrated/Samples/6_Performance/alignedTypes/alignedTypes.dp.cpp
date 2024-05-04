@@ -283,7 +283,7 @@ int main(int argc, char **argv) {
   printf("Uploading input data to GPU memory...\n");
   DPCT_CHECK_ERROR(dpct::get_in_order_queue()
                                        .memcpy(d_idata, h_idataCPU, MemorySize)
-                                       .wait()));
+                                       .wait());
 
   printf("Testing misaligned types...\n");
   printf("uint8...\n");
